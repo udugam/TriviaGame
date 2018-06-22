@@ -1,14 +1,14 @@
 //Constants
-var QUESTION_TIME = 10000;
-var PAUSE_TIME = 4000;
+var QUESTION_TIME = 12000;
+var PAUSE_TIME = 5000;
 
 //Global variables
 var questions =[
-    {question:"Toronto is the ________ biggest urban area in North America", answers:["2nd","4th","3rd","6th"], correctAnswer:1},
+    {question:"Toronto is home to the largest underground pathway in North America called PATH. How long is it?", answers:["54 kms","28 kms","14kms","10kms"], correctAnswer:1},
     {question:"The CN Tower was the tallest freestanding structure for how many years?", answers:["32","100","35","50"], correctAnswer:0},
+    {question:"Toronto is the ________ biggest urban area in North America", answers:["2nd","4th","3rd","6th"], correctAnswer:1},
     {question:"Which one of the following artists is from Toronto?", answers:["Deadmau5","Kalvin Harris","Nelly Furtado","Shania Twain"], correctAnswer:0},
     {question:"Which one of the following actors is not from Toronto?", answers:["Jim Carrey","Mike Myers","Rachel McAdams","Ryan Gosling"], correctAnswer:3},
-    {question:"Toronto is home to the largest underground pathway in North America called PATH. How long is it?", answers:["54 kms","28 kms","14kms","10kms"], correctAnswer:1},
     {question:"The Rogers Center was the first stadium in the world with a retractable roof. How long does it take to fully open?", answers:["34 minutes","20 minutes","40 minutes"], correctAnswer:1},
 ]
 var numRight;
@@ -73,7 +73,7 @@ function checkEndGame() {
 function displayQuestion() {
     updateProgressBar();
     if(checkEndGame()) {
-        $(".question").html("<h1>Game Over!</h1><button id='restart'>Restart Game</button>")
+        $(".question").html("<h1>Trivia Over!</h1><button class='btn' id='restart'>Restart Trivia</button>")
         gameSummary();
         
         //Create an event listener for the reset button that is rendered
