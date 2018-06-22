@@ -1,31 +1,39 @@
 //Constants
-var QUESTION_TIME = 5000;
-var PAUSE_TIME = 3000;
+var QUESTION_TIME = 10000;
+var PAUSE_TIME = 4000;
 
 //Global variables
 var questions =[
     {question:"Toronto is the ________ biggest urban area in North America", answers:["2nd","4th","3rd","6th"], correctAnswer:1},
     {question:"The CN Tower was the tallest freestanding structure for how many years?", answers:["32","100","35","50"], correctAnswer:0},
     {question:"Which one of the following artists is from Toronto?", answers:["Deadmau5","Kalvin Harris","Nelly Furtado","Shania Twain"], correctAnswer:0},
+    {question:"Which one of the following actors is not from Toronto?", answers:["Jim Carrey","Mike Myers","Rachel McAdams","Ryan Gosling"], correctAnswer:3},
+    {question:"Toronto is home to the largest underground pathway in North America called PATH. How long is it?", answers:["54 kms","28 kms","14kms","10kms"], correctAnswer:1},
+    {question:"The Rogers Center was the first stadium in the world with a retractable roof. How long does it take to fully open?", answers:["34 minutes","20 minutes","40 minutes"], correctAnswer:1},
 ]
 var numRight;
 var numWrong;
 var questionTimer;
 var questionNum;
 
-//start Game Sequence
-startGame();
 
-//Events
-// $("body").on("click", "#restart", function() {
-//     startGame();
-// })
+//Event Listeners
+//Creates An Event Listener for click feedback evertime a question is rendered
+$("body").on("click", ".choice", function() {
+    if($("ul").attr("clicked")==="false") { //Checks clicked attr of selected choice to prevent unwanted multiple clicking behaviour
+        $("ul").attr("clicked","true");
+        clearTimeout(questionTimer)
+        checkAnswer($(this).attr("id"));
+    }
+})
+
 
 //Functions
 function initGame() {
     numRight=0;
     numWrong=0;
     questionNum=0;
+    clearTimeout(questionTimer)
     $(".question").html("");
 }
 
@@ -67,7 +75,7 @@ function displayQuestion() {
     if(checkEndGame()) {
         $(".question").html("<h1>Game Over!</h1><button id='restart'>Restart Game</button>")
         gameSummary();
-
+        
         //Create an event listener for the reset button that is rendered
         $("body").on("click", "#restart", function() {
             startGame();
@@ -75,36 +83,32 @@ function displayQuestion() {
         
     } else {
         var question = $("<h1>"+questions[questionNum].question+"</h1>")
-        var answersDiv = $("<ul></ul>")
+        var answersDiv = $("<ul clicked='false'></ul>") //Adding a clicked attribute to the list
         $(".question").html(question);
         $(".question").append(answersDiv);
         
         questions[questionNum].answers.forEach( function(element,index) {
             answersDiv.append("<li class='choice' id='"+index+"'>"+element+"</li>");
         })
-
-        //Creates An Event Listener for click feedback evertime a question is rendered
-        $("body").on("click", ".choice", function() {
-            $("body").off("click"); //Turns event listener off as soon as a choice is clicked to prevent mutiple click behavior.
-            clearTimeout(questionTimer)
-            checkAnswer($(this).attr("id"));
-        })
+        
         questionTimer = setTimeout(timeExpired,QUESTION_TIME);
     }
 }
 
 //This function is executed whenever the time expires on a question and a choice has not been made
 function timeExpired() {
+    $("ul").attr("clicked","true"); //to prevent unwanted click behavior on the event listener
     $(".question").append("<h1>Time's Up!</h1>"+"<h2>The answer is: "+questions[questionNum].answers[questions[questionNum].correctAnswer]+"</h2>")
     questionNum++;
     numWrong++;
-    setTimeout(displayQuestion,PAUSE_TIME);
+    clearTimeout(questionTimer)
+    questionTimer = setTimeout(displayQuestion,PAUSE_TIME);
 }
 
 //This function updates the progress bar
 function updateProgressBar() {
     var numQuestions = questions.length;
-    var percentage = (questionNum/numQuestions)*100
+    var percentage = ((questionNum+1)/numQuestions)*100
     var css = "width: "+percentage+"%";
     $(".progress-bar").attr("style",css)
 }
